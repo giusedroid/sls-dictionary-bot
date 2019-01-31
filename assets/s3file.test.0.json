@@ -1,0 +1,21 @@
+[
+    {
+        "term": "test",
+        "definition": "0"
+    },
+    {
+        "term": "test",
+        "definition": "1",
+        "action": "update"
+    },
+    {
+        "term": "test",
+        "definition": "2",
+        "action": "update"
+    },
+    {
+        "term": "test",
+        "definition": "3",
+        "action": "delete"
+    }
+]
