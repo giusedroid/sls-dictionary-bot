@@ -28,15 +28,13 @@ module.exports.dictionary = async (event) => {
     };
 };
 
-const updateF = (actions, bucket) => async (event) => {
-    Promise
-        .resolve( bucket.itemsFromEvent(event) )                         // ['key', 'key', ... ]
-        .then( keys => Promise.all(R.map(bucket.download, keys)))        // [Buffer, Buffer, ...]
-        .then( R.map(bucket.decode) )                                    // [[def, def], [def], ...]
-        .then( R.flatten )                                               // [def, def, def, ...]
-        .then( R.map(actions))                                           // [λ, λ, ... ]
-        .then( series );                                                 // executes side effects
-};
+const updateF = (actions, bucket, series) => async (event) => Promise
+    .resolve( bucket.itemsFromEvent(event) )                         // ['key', 'key', ... ]
+    .then( keys => Promise.all(R.map(bucket.download, keys)))        // [Buffer, Buffer, ...]
+    .then( R.map(bucket.decode) )                                    // [[def, def], [def], ...]
+    .then( R.flatten )                                               // [def, def, def, ...]
+    .then( R.map(actions))                                           // [λ, λ, ... ]
+    .then( series );                                                 // executes side effects
 
 module.exports.testUpdateF = updateF;
-module.exports.update = updateF(term.actionsFromDefinitions(term), bucket);
+module.exports.update = updateF(term.actionsFromDefinitions(term), bucket, series);
