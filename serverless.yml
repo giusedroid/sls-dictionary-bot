@@ -1,0 +1,28 @@
+service: sls-ci
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: eu-west-1
+
+package:
+  include:
+    - handler.js
+    - LICENSE
+    - package.json
+    - "package-lock.json"
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+    - http:
+        path: hello
+        method: get
+
+plugins:
+  - serverless-stack-output
+
+custom:
+  output:
+    file: ./serverless-info.json

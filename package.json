@@ -1,0 +1,37 @@
+{
+  "name": "sls-ci",
+  "version": "1.0.0",
+  "description": "A sample serverless application deployed through circleci",
+  "main": "handler.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha **/*.spec.js",
+    "test:e2e": "./node_modules/.bin/mocha **/*.e2e.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/giusedroid/sls-ci.git"
+  },
+  "keywords": [
+    "serverless",
+    "nodejs",
+    "node",
+    "circle",
+    "circle-ci",
+    "aws"
+  ],
+  "author": "Giuseppe Battista",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/giusedroid/sls-ci/issues"
+  },
+  "homepage": "https://github.com/giusedroid/sls-ci#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2"
+  },
+  "dependencies": {
+    "serverless-stack-output": "^0.2.3"
+  }
+}
