@@ -1,28 +1,81 @@
-service: sls-ci
+service: sls-dictionary-bot
 
 provider:
   name: aws
   runtime: nodejs8.10
-  region: eu-west-1
+  region: ${env:AWS_DEFAULT_REGION, 'eu-west-1'}
 
-package:
-  include:
-    - handler.js
-    - LICENSE
-    - package.json
-    - "package-lock.json"
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: "arn:aws:dynamodb:${env:AWS_DEFAULT_REGION, 'eu-west-1'}::${self:custom.dynamoDbTableName}"
+    - Effect: Allow
+      Action:
+        - s3:ListBucket
+        - s3:GetObject
+      Resource: "arn:aws:s3:::${self:custom.s3DefinitionBucketName}/*"
 
 functions:
-  hello:
-    handler: handler.hello
+  dictionary:
+    name: ${opt:stage, 'unstable'}-dictbot-read
+    handler: handler.dictionary
+    description: "a dictionary bot for Slack in ${opt:stage, 'unstable'}"
+    memorySize: 128
+    timeout: 10
     events:
     - http:
-        path: hello
+        path: dictionary
         method: get
+    environment:
+      TABLE_NAME: ${self:custom.dynamoDbTableName}
+      BUCKET_NAME: ${seld:custom.s3DefinitionBucketName}
+      BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
+  update:
+    name: ${opt:stage, 'unstable'}-dictbot-update
+    handler: handler.update
+    description: "updates the definitions for dictbot in ${opt:stage, 'unstable'}"
+    memorySize: 512
+    timeout: 20
+    events:
+    - s3:
+        bucket: ${self:custom.s3DefinitionBucketName}
+        event: s3:ObjectCreated:*
+        rules:
+          - suffix: .json
+    environment:
+      TABLE_NAME: ${self:custom.dynamoDbTableName}
+      BUCKET_NAME: ${seld:custom.s3DefinitionBucketName}
 
 plugins:
   - serverless-stack-output
 
 custom:
+  dynamoDbTableName: ${opt:stage, 'unstable'}-dictbot-table
+  s3DefinitionBucketName: ${opt:stage, 'unstable'}-dictbot-bucket
   output:
     file: ./serverless-info.json
+
+resources:
+  Resources:
+    DefinitionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.dynamoDbTableName}
+        AttributeDefinitions:
+          - AttributeName: Term
+            AttributeType: String
+          - AttributeName: Definition
+            AttributeType: String
+        KeySchema:
+          - AttributeName: term
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    DefinitionsBucket:
+      Properties:
+        BucketName: ${self:custom.s3DefinitionBucketName}      

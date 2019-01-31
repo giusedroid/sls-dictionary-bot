@@ -1,0 +1,21 @@
+[
+    {
+        "term": "help",
+        "definition": "Hello from dictbot! Don't be a dict, use me."
+    },
+    {
+        "term": "mock",
+        "definition": "Hello world!",
+        "action": "update"
+    },
+    {
+        "term": "mock",
+        "definition": "What happened?",
+        "action": "update"
+    },
+    {
+        "term": "mock",
+        "definition": "Goodbye world!",
+        "action": "delete"
+    }
+]

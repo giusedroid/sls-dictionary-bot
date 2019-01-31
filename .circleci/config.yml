@@ -1,5 +1,18 @@
 version: 2
 jobs:
+  seed:
+    docker:
+      - image: circleci/python:3.7
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Install AWS cli
+          command: |
+            sudo pip install awscli
+      - run:
+          name: ship first definition to s3
+          command: make seed
   build:
     docker:
       - image: circleci/node:8.10
@@ -34,7 +47,7 @@ jobs:
 
       - run:
           name: Deploy application
-          command: sls deploy --stage pre
+          command: make deploy
 
       - run:
           name: Run End to End Test
