@@ -14,7 +14,7 @@ describe("The handler function", () => {
     });
 });
 
-describe.only("The S3 to DynamoDB Pipeline", function(){
+describe("The S3 to DynamoDB Pipeline", function(){
     const bucket = require("./lib/bucket.model")({}, "");
     const mockActions = R.identity;
     const mockEvent = require("./assets/s3Event");
