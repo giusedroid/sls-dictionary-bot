@@ -12,7 +12,8 @@ provider:
         - dynamodb:Query
         - dynamodb:GetItem
         - dynamodb:PutItem
-      Resource: "arn:aws:dynamodb:${env:AWS_DEFAULT_REGION, 'eu-west-1'}::${self:custom.dynamoDbTableName}"
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:*:*:table/${self:custom.dynamoDbTableName}"
     - Effect: Allow
       Action:
         - s3:ListBucket
@@ -25,15 +26,17 @@ functions:
     handler: handler.dictionary
     description: "a dictionary bot for Slack in ${opt:stage, 'unstable'}"
     memorySize: 128
-    timeout: 10
+    timeout: 30
     events:
     - http:
         path: dictionary
-        method: get
+        method: post
     environment:
       TABLE_NAME: ${self:custom.dynamoDbTableName}
-      BUCKET_NAME: ${seld:custom.s3DefinitionBucketName}
+      BUCKET_NAME: ${self:custom.s3DefinitionBucketName}
       BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
+      CHALLENGE_TOKEN: ${env:SLACK_CHALLENGE_TOKEN}
+      MAKEFILE_TEST: ${env:FROM_MAKEFILE}
   update:
     name: ${opt:stage, 'unstable'}-dictbot-update
     handler: handler.update
@@ -48,14 +51,14 @@ functions:
           - suffix: .json
     environment:
       TABLE_NAME: ${self:custom.dynamoDbTableName}
-      BUCKET_NAME: ${seld:custom.s3DefinitionBucketName}
+      BUCKET_NAME: ${self:custom.s3DefinitionBucketName}
 
 plugins:
   - serverless-stack-output
 
 custom:
-  dynamoDbTableName: ${opt:stage, 'unstable'}-dictbot-table
-  s3DefinitionBucketName: ${opt:stage, 'unstable'}-dictbot-bucket
+  dynamoDbTableName: ${env:DYNAMODB_TABLE_NAME}
+  s3DefinitionBucketName: ${env:S3_DEFINITION_BUCKET_NAME}
   output:
     file: ./serverless-info.json
 
@@ -67,15 +70,11 @@ resources:
         TableName: ${self:custom.dynamoDbTableName}
         AttributeDefinitions:
           - AttributeName: Term
-            AttributeType: String
-          - AttributeName: Definition
-            AttributeType: String
+            AttributeType: S
         KeySchema:
-          - AttributeName: term
+          - AttributeName: Term
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-    DefinitionsBucket:
-      Properties:
-        BucketName: ${self:custom.s3DefinitionBucketName}      
+    

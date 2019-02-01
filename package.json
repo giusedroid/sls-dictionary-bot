@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "ramda": "^0.26.1",
-    "serverless-stack-output": "^0.2.3"
+    "serverless-stack-output": "^0.2.3",
+    "slack": "^11.0.1"
   }
 }

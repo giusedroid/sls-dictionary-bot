@@ -5,12 +5,9 @@ const readFile = util.promisify(fs.readFile);
 const R = require("ramda");
 const { expect } = require("chai");
 
-describe("The handler function", () => {
-    it.skip("returns a message", () => {
-        handler.hello(null, null, function(error, response){
-            const body = JSON.parse(response.body);
-            body.message.should.be.equal(handler.message);
-        });
+describe("Dictionary endpoint handler", () => {
+    it("returns a challenge", () => {
+
     });
 });
 

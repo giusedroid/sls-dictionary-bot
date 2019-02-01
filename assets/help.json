@@ -1,21 +1,62 @@
 [
     {
         "term": "help",
-        "definition": "Hello from dictbot! Don't be a dict, use me."
+        "definition": "Hello from dictbot! Use the instruction `search: <YOUR TERM>` to get a definition "
     },
     {
-        "term": "mock",
-        "definition": "Hello world!",
-        "action": "update"
+        "term": "algorithm",
+        "definition": "An algorithm is like a digital recipe. It’s a list of instructions that a computer has to follow in order to solve a problem or complete a task. It works like this: selected data gets collected, then sent to an algorithm via a thing called an ‘input source.’ It then gets read by the algorithm, then rewritten to an ‘output source’. In practice the whole process may be as simple as: “if X (data says this), then Y (do that).”"
     },
     {
-        "term": "mock",
-        "definition": "What happened?",
-        "action": "update"
+        "term": "analytics",
+        "definition": "Analytics is about discovering, interpreting, and communicating meaningful patterns in data. It encompasses a whole bunch of things from predictive analytics, prescriptive analytics and enterprise decision management, to supply-chain analytics, cognitive analytics and Big Data analytics. Businesses use analytics to make smarter, better-informed decisions and predictions."
     },
     {
-        "term": "mock",
-        "definition": "Goodbye world!",
-        "action": "delete"
+        "term":"artificial intelligence",
+        "definition":"AI is a branch of computer science aimed at building machines that essentially ‘think’ for themselves, for example, by being able to problem-solve and improve their problem-solving abilities over time – hence the word “intelligence”. AI systems that concentrate on specific tasks (like understanding language or recognizing pictures) are known as “weak AI”. Systems that actually exhibit the same skillful and flexible behaviour that humans do are known as “strong AI” – but they’re still hypothetical...for now."
+    },
+    {
+        "term":"ai",
+        "definition":"AI is a branch of computer science aimed at building machines that essentially ‘think’ for themselves, for example, by being able to problem-solve and improve their problem-solving abilities over time – hence the word “intelligence”. AI systems that concentrate on specific tasks (like understanding language or recognizing pictures) are known as “weak AI”. Systems that actually exhibit the same skillful and flexible behaviour that humans do are known as “strong AI” – but they’re still hypothetical...for now."
+    },
+    {
+        "term": "bayesian network",
+        "definition": "Bayes Theorem is a way of defining a probability, based on knowledge of other, prior probabilities. It goes like this: you use relevant evidence (known as conditional probability) to determine the probability of an event, based on prior knowledge of conditions that might now be related to it. A Bayesian network is a graphical model (a type of statistical model) that represents Bayes Theorem via a graph. An example of a Bayesian network in action is one that represents the probabilistic relationships between diseases and symptoms: given symptoms, the network computes probabilities for all the possible diseases spreading."
+    },
+    {
+        "term": "big data",
+        "definition": "Big Data definitions have changed a lot over the years as technology’s evolved. The more generous ones equate Big Data with pretty much any data, in any form, that’s being used to gain insight and generate value. But stricter definitions equate Big Data only with data sets that are too complex for traditional data-processing application softwares to adequately deal with. (If we had to choose, we’d go for the stricter definition, but we’re not tied to it – size doesn’t matter, it’s what you do with it, you know?)"
+    },
+    {
+        "term": "biometrics",
+        "definition": "Biometrics is about using analytics and technology to identify people, based on one (or more) physical properties. Biometric tests include things like: fingerprint recognition, facial recognition, iris recognition, and more. Right now biometrics is most commonly used in smartphones. But it’s also used in airports, at offices, in hospitals, and a whole bunch of other places. If your business collects biometric data, you’ll definitely want to put a smart analytics initiative in place if you haven’t already – that data’s super valuable, but it’s also super risky if you’re not on top of things like data compliance and quality."
+    },
+    {
+        "term":"business intelligence",
+        "definition":"Business intelligence (BI) is a tricky one to define. It sounds like an end goal, but it’s really a process. When people say ‘BI’ what they’re talking about is the leveraging of software and services to turn dormant data into actionable intelligence. It works like this: BI tools access and analyse data sets, then present analytical findings in reports, summaries, dashboards, graphs, charts and maps. The result is that users (you) get a clearer overview of your organization, and make smarter, better-informed business decisions."
+    },
+    {
+        "term":"cloudreach",
+        "definition":"A bunch of people committed to helping businesses get the most value out of data analytics – by cutting through the hype."
+    },
+    {
+        "term":"cloud computing",
+        "definition":"First some context: the cloud is the place where software and services run on the internet – instead of locally on your computer. Cloud platforms are ways of delivering customized collections of cloud software and services to users (you). Cloud computing (what you came here for) is what you get when you subscribe to a cloud platform."
+    },
+    {
+        "term":"computer vision",
+        "definition":"First some context: the cloud is the place where software and services run on the internet – instead of locally on your computer. Cloud platforms are ways of delivering customized collections of cloud software and services to users (you). Cloud computing (what you came here for) is what you get when you subscribe to a cloud platform."
+    },
+    {
+        "term":"dark data",
+        "definition":"Dark data is just data that’s not being used. Sounded cooler than that though, didn’t it."
+    },
+    {
+        "term":"data custodian",
+        "definition":"This is the person responsible for your database structure and technical environment, including data storage. They might also be responsible for granting people access to your documents or electronic files, and protecting your data according to your security policies."
+    },
+    {
+        "term": "ciao",
+        "definition": "It means hello in italian"
     }
 ]
