@@ -77,4 +77,13 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+  Outputs:
+    DefinitionBucketName:
+      Value: ${self:custom.s3DefinitionBucketName}
+      Export:
+        Name: ${opt:stage, 'unstable'}DefinitionBucketName
+    DefinitionTableName:
+      Value: ${self:custom.dynamoDbTableName}
+      Export:
+        Name: ${opt:stage, 'unstable'}DefinitionTableName
     

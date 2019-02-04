@@ -5,7 +5,7 @@
   "main": "handler.js",
   "scripts": {
     "pretest": "npx eslint ./*.js",
-    "test": "./node_modules/.bin/mocha ./*.spec.js lib/*.spec.js",
+    "test": "nyc ./node_modules/.bin/mocha ./*.spec.js lib/*.spec.js && nyc report --reporter=text-lcov | coveralls",
     "test:e2e": "./node_modules/.bin/mocha ./*.e2e.js"
   },
   "repository": {
@@ -30,10 +30,13 @@
   "devDependencies": {
     "aws-sdk": "^2.395.0",
     "chai": "^4.2.0",
+    "coveralls": "^3.0.2",
     "eslint": "^5.12.1",
     "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
     "request": "^2.88.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "sinon": "^7.2.3"
   },
   "dependencies": {
     "ramda": "^0.26.1",

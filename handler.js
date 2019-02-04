@@ -12,17 +12,23 @@ const REGION = process.env.AWS_REGION || "eu-west-1";
 
 AWS.config.update({ region: REGION });
 
+// dynamo :: DynamoDB Client
 const dynamo = new AWS.DynamoDB({ apiVersion: "2012-10-08"});
+// term :: Term Model
 const term = require("./lib/term.model")(dynamo, TABLE);
 
+// s3 :: S3 Client
 const s3 = new AWS.S3({ apiVersion: "2006-03-01"});
+// bucket :: Bucket Model
 const bucket = require("./lib/bucket.model")(s3, BUCKET);
 
+// bot :: Slack Bot
 const bot = new Slack( {token: TOKEN});
 
-module.exports.dictionary = async (event) => {
+// dictionaryF :: Term Model -> String -> λ* -> HTTP Response
+const dictionaryF = (term, CHALLENGE_TOKEN, bot) => async (event) => {
+    console.log("triggering event", event);
     const body = JSON.parse(R.path(["body"], event));
-    console.log("body", body);
 
     if( body && "challenge" in body && R.path(["token"], body) === CHALLENGE_TOKEN ){
         return {
@@ -36,27 +42,31 @@ module.exports.dictionary = async (event) => {
     // one time only: use this to retrieve the challenge token
     if( body && "challenge" in body && !CHALLENGE_TOKEN){
         console.log(`CHALLENGE TOKEN FOUND: ${R.path(["token"], body)}`);
-        return `Challenge token found and logged in cloudwatch ${new Date()}. Use CHALLENGE TOKEN FOUND to filter.`;
+        return {
+            statusCode: 200,
+            body: JSON.stringify({
+                message: "Challenge token found and logged in cloudwatch. Use CHALLENGE TOKEN FOUND to filter.",
+                timestamp: new Date()
+            })
+        };
     }
     
     const { channel, bot_id, text } = R.path(["event"], body);
     
-    // ingore messages form myself
-    if ( bot_id === "BFVJD89U6") return "200 OK";
+    // ingore messages form other bots (and myself)
+    if ( bot_id ) return "200 OK";
 
-    const keyword = R.defaultTo("nope", R.path([1],text.split("search: ")));
+    const keyword = R.defaultTo("NOK", R.path([1],text.split("search: ")));
 
-    const reply = await term.get(keyword);
-
-    console.log(reply);
+    let reply;
+    if( keyword !== "NOK")
+        reply = await term.get(keyword);
 
     const messageSent = await bot.chat.postMessage({
         token: TOKEN,
         channel,
         text: R.defaultTo("Sorry, I didn't get that...", R.path(["Item", "Description", "S"], reply))
     });
-
-    console.log("message sent:", messageSent);
 
     return {
         statusCode: 200,
@@ -68,7 +78,7 @@ module.exports.dictionary = async (event) => {
 
 };
 
-// updateF :: λ -> BucketModel -> λ -> λ* -> Promise
+// updateF :: λ -> Bucket Model -> λ -> λ* -> Promise
 const updateF = (actions, bucket, series) => 
     async (event) => 
         Promise                                                             // Data Flow
@@ -77,12 +87,14 @@ const updateF = (actions, bucket, series) =>
             .then( R.map(bucket.decode) )                                   // [[def, def], [def], ...]
             .then( R.flatten )                                              // [def, def, def, ...]
             .then( R.map(actions) )                                         // [λ, λ, ... ]
-            .then(series)                                                   // executes side effects
-            .then( () => {
-                console.log("done"); 
-            });                                                
+            .then(series);                                                   // executes side effects                                   
 
+// exports for testing purposes 
 module.exports.testUpdateF = updateF;
+module.exports.testDictionaryF = dictionaryF;
 
-// update :: AWSEvent -> Promise
+// update :: AWS Event -> Promise
 module.exports.update = updateF(term.actionsFromDefinitions(term), bucket, series);
+
+// dictionary :: AWS Event -> Promise
+module.exports.dictionary = dictionaryF(term, CHALLENGE_TOKEN, bot);

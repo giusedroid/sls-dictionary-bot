@@ -1,0 +1,10 @@
+{
+    "Item":{
+        "Term":{
+            "S":"sample"
+        },
+        "Description":{
+            "S":"sample description"
+        }
+    }
+}
