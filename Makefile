@@ -10,6 +10,8 @@ export S3_DEFINITION_BUCKET_NAME=$(DEPLOY_ENV)-dictbot-bucket-cr
 export FROM_MAKEFILE=circleci
 
 deploy:
+	echo $(DYNAMODB_TABLE_NAME)
+	echo $(S3_DEFINITION_BUCKET_NAME)
 	sls deploy --stage $(DEPLOY_ENV)
 
 seed:
