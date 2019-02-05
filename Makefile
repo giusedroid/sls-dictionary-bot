@@ -13,7 +13,7 @@ deploy:
 	sls deploy --stage $(DEPLOY_ENV)
 
 seed:
-	aws s3 cp ./assets/help.json s3://$(S3_DEFINITION_BUCKET_NAME)
+	aws s3 cp ./assets/exampleDictionary.json s3://$(S3_DEFINITION_BUCKET_NAME)
 
 # LOCAL RECIPES -----------------------------------------------------
 export DYNAMODB_TABLE_NAME=local-giuse-dictbot-table
@@ -23,4 +23,4 @@ export FROM_MAKEFILE=local
 deploy-local:
 	sls deploy --stage local
 seed-local:
-	aws s3 cp ./assets/help.json s3://$(S3_DEFINITION_BUCKET_NAME)
+	aws s3 cp ./assets/exampleDictionary.json s3://$(S3_DEFINITION_BUCKET_NAME)

@@ -98,7 +98,7 @@ describe("DictBot End to End test!", async function() {
                 Key
             });
             console.log("waiting to allow lambda to be invoked...");
-            await delay(1000);
+            await delay(2500);
             const itemInDynamo = await term.get("e2e::test");
             expect(R.path(["Item","Description","S"], itemInDynamo)).to.eql("0");
         });
@@ -118,7 +118,7 @@ describe("DictBot End to End test!", async function() {
                 Key
             });
             console.log("waiting to allow lambda to be invoked...");
-            await delay(1000);
+            await delay(2500);
             const itemInDynamo = await term.get("e2e::test");
             context.dynamo.push("e2e::test");
             expect(R.path(["Item","Description","S"], itemInDynamo)).to.eql("message test");
