@@ -92,6 +92,7 @@ npm run test:local # won't ship coverage report to coverall
 nvm use
 npm i -g serverless
 npm i
+make deploy-local
 # make sure all the environmental variables are set
 npm run test:e2e
 ```
