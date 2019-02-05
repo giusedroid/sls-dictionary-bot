@@ -5,6 +5,7 @@
 
 ## What
 
+![Databot](assets/data-bot-2.gif)
 This repo provisions a Slack chat bot on AWS.  
 It's written in NodeJS with Serverless Framework and a bit of CloudFormation.  
 
