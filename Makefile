@@ -18,13 +18,11 @@ seed:
 	aws s3 cp ./assets/exampleDictionary.json s3://$(S3_DEFINITION_BUCKET_NAME)
 
 # LOCAL RECIPES -----------------------------------------------------
-ifndef $(CIRCLE_BRANCH)
-    export DYNAMODB_TABLE_NAME=local-giuse-dictbot-table
-    export S3_DEFINITION_BUCKET_NAME=local-giuse-dictbot-bucket
-    export FROM_MAKEFILE=local
-endif
 
 deploy-local:
+	DYNAMODB_TABLE_NAME=local-giuse-dictbot-table \
+	S3_DEFINITION_BUCKET_NAME=local-giuse-dictbot-bucket \
+	FROM_MAKEFILE=local \
 	sls deploy --stage local
 seed-local:
 	aws s3 cp ./assets/exampleDictionary.json s3://$(S3_DEFINITION_BUCKET_NAME)
