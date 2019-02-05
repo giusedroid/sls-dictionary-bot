@@ -1,6 +1,6 @@
 # sls-dictionary-bot
 
-[![CircleCI](https://circleci.com/gh/giusedroid/sls-ci.svg?style=svg)](https://circleci.com/gh/giusedroid/sls-ci)
+[![CircleCI](https://circleci.com/gh/giusedroid/sls-dictionary-bot.svg?style=svg)](https://circleci.com/gh/giusedroid/sls-dictionary-bot)
 [![Coverage Status](https://coveralls.io/repos/github/giusedroid/sls-dictionary-bot/badge.svg)](https://coveralls.io/github/giusedroid/sls-dictionary-bot)
 
 ## What

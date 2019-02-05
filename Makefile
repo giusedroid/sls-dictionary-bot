@@ -25,4 +25,5 @@ deploy-local:
 	FROM_MAKEFILE=local \
 	sls deploy --stage local
 seed-local:
+	S3_DEFINITION_BUCKET_NAME=local-giuse-dictbot-bucket \
 	aws s3 cp ./assets/exampleDictionary.json s3://$(S3_DEFINITION_BUCKET_NAME)
