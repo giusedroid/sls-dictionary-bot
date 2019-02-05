@@ -18,7 +18,7 @@ seed:
 	aws s3 cp ./assets/exampleDictionary.json s3://$(S3_DEFINITION_BUCKET_NAME)
 
 # LOCAL RECIPES -----------------------------------------------------
-ifndef ($(CIRCLE_BRANCH))
+ifndef $(CIRCLE_BRANCH)
     export DYNAMODB_TABLE_NAME=local-giuse-dictbot-table
     export S3_DEFINITION_BUCKET_NAME=local-giuse-dictbot-bucket
     export FROM_MAKEFILE=local
