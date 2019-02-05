@@ -16,6 +16,7 @@ const expect = require("chai").expect;
 const region = process.env.AWS_REGION || "eu-west-1";
 const token = process.env.SLACK_BOT_TOKEN;
 const channel = process.env.SLACK_TEST_CHANNEL;
+const challenge = process.env.SLACK_CHALLENGE_TOKEN;
 
 AWS.config.update({ region });
 
@@ -39,20 +40,6 @@ const postMessageF = (token, channel) => text => bot.chat.postMessage({token, ch
 // postMessage :: String -> Promise
 const postMessage = postMessageF(token, channel);
 
-// postOptions :: String -> {}
-const postOptions = text => ({
-    method: "POST",
-    body: {
-        event: {
-            channel,
-            text
-        }
-    },
-    json: true
-});
-
-// triggerLambda :: String -> Promise
-const triggerLambda = text => request.post(`${ServiceEndpoint}/dictionary`, postOptions(text));
 
 describe("DictBot End to End test!", async function() {
     this.timeout(30000);
@@ -64,7 +51,7 @@ describe("DictBot End to End test!", async function() {
     
     this.beforeAll(
         async function(){
-            if(channel){
+            if(channel && challenge){
                 await postMessage("DictBot - e2e - begin");
             }
         }
@@ -77,7 +64,7 @@ describe("DictBot End to End test!", async function() {
             const dynamoDeletes = context.dynamo.map( each => term.delete(each));
             Promise
                 .all([ ...s3Deletes, ...dynamoDeletes])
-                .then(() => channel && postMessage("DictBot - e2e - end"))
+                .then(() => channel && challenge && postMessage("DictBot - e2e - end"))
                 .then(()=> done());
         }
     );
@@ -98,7 +85,7 @@ describe("DictBot End to End test!", async function() {
                 Key
             });
             console.log("waiting to allow lambda to be invoked...");
-            await delay(2500);
+            await delay(4000);
             const itemInDynamo = await term.get("e2e::test");
             expect(R.path(["Item","Description","S"], itemInDynamo)).to.eql("0");
         });
@@ -127,11 +114,44 @@ describe("DictBot End to End test!", async function() {
 
     describe("HTTP Endpoint", function(){
         it("Should reply with the correct status", async function(){
-            const response = await triggerLambda("search: e2e::test");
-            const {message, messageSent:{ ok, message:{text}}} = response;
-            expect(message).to.eql("200 OK");
-            expect(ok).to.be.true;
-            expect(text).to.eql("message test");
+            // messageOptions :: String -> {}
+            const messageOptions = text => ({
+                method: "POST",
+                body: {
+                    event: {
+                        channel,
+                        text
+                    }
+                },
+                json: true
+            });
+
+            // challengeOptions :: {}
+            const challengeOptions = {
+                method: "POST",
+                body: {
+                    challenge: "some challenge",
+                    token: "some token"
+                },
+                json: true
+            };
+            
+            if(challenge){
+                console.log("bot is verified, so can send messages");
+                const response = await request.post(`${ServiceEndpoint}/dictionary`, messageOptions("search: e2e::test"));
+                const {message, messageSent:{ ok, message:{text}}} = response;
+                expect(message).to.eql("200 OK");
+                expect(ok).to.be.true;
+                expect(text).to.eql("message test");
+            }else{
+                console.log("bot is not verified, so checking if can be challenged.\nyou should verify the app and add SLACK_CHALLENGE_TOKEN to your env");
+                const response = await request.post(`${ServiceEndpoint}/dictionary`, challengeOptions);
+                const {message} = response;
+                expect(message).to.eql("Challenge token found and logged in cloudwatch. Use CHALLENGE TOKEN FOUND to filter.");
+                expect(response).to.have.property("timestamp");
+            }
+
+
         });
 
     });

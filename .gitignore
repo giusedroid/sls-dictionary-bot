@@ -10,3 +10,4 @@ jspm_packages
 serverless-info.json
 
 .secrets
+.DS_Store

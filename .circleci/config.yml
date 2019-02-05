@@ -13,6 +13,7 @@ jobs:
       - run:
           name: ship first definition to s3
           command: make seed
+  
   build:
     docker:
       - image: circleci/node:8.10
@@ -53,3 +54,11 @@ jobs:
           name: Run End to End Test
           command: |
             npm run test:e2e
+workflows:
+  version: 2
+  all:
+    jobs:
+      - build
+      - seed:
+          requires:
+            - build

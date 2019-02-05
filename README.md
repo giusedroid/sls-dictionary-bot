@@ -10,7 +10,7 @@ It's written in NodeJS with Serverless Framework and a bit of CloudFormation.
 
 ### Architecture
 
-Coming soon.
+![Serverless Slack Bot Architecture](assets/sls-bot.png)
 
 ## Configure it
 
@@ -71,7 +71,27 @@ Install NodeJS 8.10 (use of `nvm` is recommended).
 nvm use # optional
 npm i -g serverless
 npm i
-npm test
+npm run test:local # won't ship coverage report to coverall
 make deploy-local
 make seed-local
+```
+
+## Test
+
+### Unit Test
+
+```bash
+nvm use
+nmp i
+npm run test:local # won't ship coverage report to coverall
+```
+
+### End 2 End
+
+```bash
+nvm use
+npm i -g serverless
+npm i
+# make sure all the environmental variables are set
+npm run test:e2e
 ```

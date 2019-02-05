@@ -6,7 +6,8 @@
   "scripts": {
     "pretest": "npx eslint ./*.js",
     "test": "nyc ./node_modules/.bin/mocha ./*.spec.js lib/*.spec.js && nyc report --reporter=text-lcov | coveralls",
-    "test:e2e": "./node_modules/.bin/mocha ./*.e2e.js"
+    "test:e2e": "./node_modules/.bin/mocha ./*.e2e.js",
+    "test:local": "nyc ./node_modules/.bin/mocha ./*.spec.js lib/*.spec.js "
   },
   "repository": {
     "type": "git",
