@@ -22,9 +22,9 @@ provider:
 
 functions:
   dictionary:
-    name: ${opt:stage, 'unstable'}-dictbot-read
+    name: ${opt:stage, 'local'}-dictbot-read
     handler: handler.dictionary
-    description: "a dictionary bot for Slack in ${opt:stage, 'unstable'}"
+    description: "a dictionary bot for Slack in ${opt:stage, 'local'}"
     memorySize: 128
     timeout: 30
     events:
@@ -36,11 +36,10 @@ functions:
       BUCKET_NAME: ${self:custom.s3DefinitionBucketName}
       BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
       CHALLENGE_TOKEN: ${env:SLACK_CHALLENGE_TOKEN}
-      MAKEFILE_TEST: ${env:FROM_MAKEFILE}
   update:
-    name: ${opt:stage, 'unstable'}-dictbot-update
+    name: ${opt:stage, 'local'}-dictbot-update
     handler: handler.update
-    description: "updates the definitions for dictbot in ${opt:stage, 'unstable'}"
+    description: "updates the definitions for dictbot in ${opt:stage, 'local'}"
     memorySize: 512
     timeout: 20
     events:
@@ -81,9 +80,9 @@ resources:
     DefinitionBucketName:
       Value: ${self:custom.s3DefinitionBucketName}
       Export:
-        Name: ${opt:stage, 'unstable'}DefinitionBucketName
+        Name: ${opt:stage, 'local'}DefinitionBucketName
     DefinitionTableName:
       Value: ${self:custom.dynamoDbTableName}
       Export:
-        Name: ${opt:stage, 'unstable'}DefinitionTableName
+        Name: ${opt:stage, 'local'}DefinitionTableName
     
