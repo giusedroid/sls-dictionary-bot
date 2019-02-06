@@ -69,17 +69,13 @@ jobs:
       - image: circleci/node:8.10
 
     working_directory: ~/repo
-
-    steps:
-      <<: *integration
+    <<: *integration
   integration-stable:
     docker:
       - image: circleci/node:8.10
 
     working_directory: ~/repo
-
-    steps:
-      <<: *integration 
+    <<: *integration 
   build-stable:
     docker:
       - image: circleci/node:8.10
@@ -89,8 +85,7 @@ jobs:
       DEPLOY_ENV: stable
       DYNAMODB_TABLE_NAME: stable-dictbot-table-cr
       S3_DEFINITION_BUCKET_NAME: stable-dictbot-bucket-cr
-    steps:
-      <<: *deploy
+    <<: *deploy
   
 workflows:
   version: 2
