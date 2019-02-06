@@ -16,10 +16,13 @@ deploy: &deploy
     - run:
         name: Deploy application
         command: sls deploy --stage ${DEPLOY_ENV}
+    - run:
+        name: list
+        command: ls
     - persist_to_workspace:
         root: .
         paths:
-          - serverless-info.json
+          - ./serverless-info.json
     - run:
         name: Deploy seed file
         command: aws s3 cp ./assets/data/data.json s3://$(S3_DEFINITION_BUCKET_NAME)

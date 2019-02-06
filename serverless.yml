@@ -36,7 +36,6 @@ functions:
       BUCKET_NAME: ${self:custom.s3DefinitionBucketName}
       BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
       CHALLENGE_TOKEN: ${env:SLACK_CHALLENGE_TOKEN}
-      MAKEFILE_TEST: ${env:FROM_MAKEFILE}
   update:
     name: ${opt:stage, 'unstable'}-dictbot-update
     handler: handler.update
