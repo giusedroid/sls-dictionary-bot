@@ -22,6 +22,11 @@ It's written in NodeJS with Serverless Framework and a bit of CloudFormation.
 - Node 8.10 (as this is the lambda target runtime)
 - The [AWS cli](https://aws.amazon.com/cli/)
 
+### Disclaimer
+
+This repository is thought to introduce the reader to serverless technologies.  
+For a production environment, it would be highly recommended to separate the lifecycles of the two microservices (update and read lambdas, with relative infrastructure).  
+
 ## Configure it
 
 Most of the configuration is provided through environmental variables (both for your CI and local environment).  

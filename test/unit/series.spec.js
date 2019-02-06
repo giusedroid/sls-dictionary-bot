@@ -1,4 +1,4 @@
-const { series } = require("./series");
+const { series } = require("../../lib/series");
 const { expect } = require("chai");
 
 describe("series", function() {
