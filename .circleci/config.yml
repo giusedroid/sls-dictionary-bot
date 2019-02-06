@@ -12,7 +12,7 @@ deploy: &deploy
           sudo apt install python-pip python-dev && sudo pip install awscli
     - run:
         name: Install sls
-        run: sudo npm i -g serverless
+        command: sudo npm i -g serverless
     - run:
         name: Deploy application
         command: sls deploy --stage ${DEPLOY_ENV}
