@@ -15,7 +15,7 @@ deploy: &deploy
         command: sudo npm i -g serverless
     - run:
         name: Install serverless output stack
-        command: sudo npm install serverless-stack-output
+        command: npm install serverless-stack-output
     - run:
         name: Deploy application
         command: sls deploy --stage ${DEPLOY_ENV}
