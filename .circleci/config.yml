@@ -11,8 +11,11 @@ deploy: &deploy
         command: |
           sudo apt install python-pip python-dev && sudo pip install awscli
     - run:
+        name: Install sls
+        run: sudo npm i -g serverless
+    - run:
         name: Deploy application
-        command: sls deploy --stage $(DEPLOY_ENV)
+        command: sls deploy --stage ${DEPLOY_ENV}
     - persist_to_workspace:
         root: .
         paths:
@@ -44,10 +47,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Serverless CLI and dependencies
-          command: |
-            sudo npm i -g serverless
-            npm install
+          name: Install dependencies
+          command: npm install
       - save_cache:
           paths:
             - node_modules
