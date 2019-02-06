@@ -1,20 +1,41 @@
+deploy: &deploy
+  steps:
+    - checkout
+    - restore_cache:
+        keys:
+        - v1-dependencies-
+        # fallback to using the latest cache if no exact match is found
+        - v1-dependencies-
+    - run:
+        name: Install AWS cli
+        command: |
+          sudo apt install python-pip python-dev && pip install awscli
+    - run:
+        name: Deploy application
+        command: sls deploy --stage $(DEPLOY_ENV)
+    - persist_to_workspace:
+        root: .
+        paths:
+          - serverless-info.json
+    - run:
+        name: Deploy seed file
+        command: aws s3 cp ./assets/data/data.json s3://$(S3_DEFINITION_BUCKET_NAME)
+integration: &integration
+  steps:
+    - checkout
+    - attach_workspace:
+        at: .
+    - restore_cache:
+        keys:
+        - v1-dependencies-
+        # fallback to using the latest cache if no exact match is found
+        - v1-dependencies-
+    - run: 
+        name: Run tests
+        command: npm run test:e2e
 version: 2
 jobs:
-  seed:
-    docker:
-      - image: circleci/python:3.7
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run:
-          name: Install AWS cli
-          command: |
-            sudo pip install awscli
-      - run:
-          name: ship first definition to s3
-          command: make seed
-  
-  build:
+  unit:
     docker:
       - image: circleci/node:8.10
 
@@ -22,43 +43,82 @@ jobs:
 
     steps:
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-
       - run:
           name: Install Serverless CLI and dependencies
           command: |
             sudo npm i -g serverless
             npm install
-
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-
-        
-      # run tests!
       - run: 
           name: Run tests
           command: npm test
+  build-unstable:
+    docker:
+      - image: circleci/node:8.10
+    working_directory: ~/repo
+    environment:
+      DEPLOY_ENV: unstable
+      DYNAMODB_TABLE_NAME: unstable-dictbot-table-cr
+      S3_DEFINITION_BUCKET_NAME: unstable-dictbot-bucket-cr
+    <<: *deploy
+  integration-unstable:
+    docker:
+      - image: circleci/node:8.10
 
-      - run:
-          name: Deploy application
-          command: make deploy
+    working_directory: ~/repo
 
-      - run:
-          name: Run End to End Test
-          command: |
-            npm run test:e2e
+    steps:
+      <<: *integration
+  integration-stable:
+    docker:
+      - image: circleci/node:8.10
+
+    working_directory: ~/repo
+
+    steps:
+      <<: *integration 
+  build-stable:
+    docker:
+      - image: circleci/node:8.10
+
+    working_directory: ~/repo
+    environment:
+      DEPLOY_ENV: stable
+      DYNAMODB_TABLE_NAME: stable-dictbot-table-cr
+      S3_DEFINITION_BUCKET_NAME: stable-dictbot-bucket-cr
+    steps:
+      <<: *deploy
+  
 workflows:
   version: 2
-  all:
+  build-and-deploy:
     jobs:
-      - build
-      - seed:
+      - unit
+      - build-unstable:
           requires:
-            - build
+            - unit
+      - integration-unstable:
+          requires:
+            - build-unstable
+      - hold-stable:
+          type: approval
+          requires:
+            - integration-unstable
+          filters:
+            branches:
+              only: master
+      - build-stable:
+          requires:
+            - hold-stable
+          filters:
+            branches:
+              only: master
+      - integration-stable:
+          requires:
+            - build-stable
+          filters:
+            branches:
+              only: master
