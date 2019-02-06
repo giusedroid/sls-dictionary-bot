@@ -104,9 +104,10 @@ const updateF = (actionMapper, bucket, series) =>
             .then( R.map(actionMapper) )                                    // [λ, λ, ... ]
             .then(series);                                                  // executes side effects                                   
 
-// update :: AWS Event -> Promise
+// update -------------------------------------------------------------------------------
 // this is the handler for the update lambda
 // it's a specialized version of updateF
+// update :: AWS Event -> Promise
 module.exports.update = updateF(term.actionsFromDefinitions(term), bucket, series);
 
 // dictionary ---------------------------------------------------------------------------
