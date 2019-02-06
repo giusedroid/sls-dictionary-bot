@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const modelFactory = require("./term.model");
+const modelFactory = require("../../lib/term.model");
 
 const mockItem = {
     "ConsumedCapacity": {

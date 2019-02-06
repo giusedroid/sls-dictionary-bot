@@ -4,10 +4,10 @@
   "description": "A sample serverless slack bot deployed through circleci",
   "main": "handler.js",
   "scripts": {
-    "pretest": "npx eslint ./*.js",
-    "test": "nyc ./node_modules/.bin/mocha ./*.spec.js lib/*.spec.js && nyc report --reporter=text-lcov | coveralls",
-    "test:e2e": "./node_modules/.bin/mocha ./*.e2e.js",
-    "test:local": "nyc ./node_modules/.bin/mocha ./*.spec.js lib/*.spec.js "
+    "pretest": "npx eslint ./lib/*.js ./handlers/*.js",
+    "test": "nyc ./node_modules/.bin/mocha ./test/**/*.spec.js && nyc report --reporter=text-lcov | coveralls",
+    "test:e2e": "./node_modules/.bin/mocha ./test/e2e/*.e2e.js",
+    "test:local": "nyc ./node_modules/.bin/mocha ./test/**/*.spec.js"
   },
   "repository": {
     "type": "git",

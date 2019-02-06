@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const modelFactory = require("./bucket.model");
+const modelFactory = require("../../lib/bucket.model");
 
 const mockResolver = resolved => ({
     promise(){

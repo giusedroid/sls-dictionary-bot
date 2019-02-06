@@ -20,10 +20,21 @@ provider:
         - s3:GetObject
       Resource: "arn:aws:s3:::${self:custom.s3DefinitionBucketName}/*"
 
+package:
+  exclude:
+    - assets/**
+    - test/**
+    - .circleci/**
+    - .nyc_output/**
+    - .secrets/**
+    - .gitignore
+    - Makefile
+    - serverless.yml
+
 functions:
   dictionary:
     name: ${opt:stage, 'local'}-dictbot-read
-    handler: handler.dictionary
+    handler: handlers/read.handler
     description: "a dictionary bot for Slack in ${opt:stage, 'local'}"
     memorySize: 128
     timeout: 30
@@ -38,7 +49,7 @@ functions:
       CHALLENGE_TOKEN: ${env:SLACK_CHALLENGE_TOKEN}
   update:
     name: ${opt:stage, 'local'}-dictbot-update
-    handler: handler.update
+    handler: handlers/update.handler
     description: "updates the definitions for dictbot in ${opt:stage, 'local'}"
     memorySize: 512
     timeout: 20

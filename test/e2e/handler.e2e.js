@@ -9,7 +9,7 @@ const readFile = util.promisify(fs.readFile);
 const { ServiceEndpoint,
     DefinitionBucketName,
     DefinitionTableName
-} = require("./serverless-info");
+} = require("../../serverless-info");
 
 const expect = require("chai").expect;
 
@@ -23,7 +23,7 @@ AWS.config.update({ region });
 // dynamo :: DynamoDB Client
 const dynamo = new AWS.DynamoDB({ apiVersion: "2012-10-08"});
 // term :: Term Model
-const term = require("./lib/term.model")(dynamo, DefinitionTableName);
+const term = require("../../lib/term.model")(dynamo, DefinitionTableName);
 
 // s3 :: S3 Client
 const s3 = new AWS.S3({ apiVersion: "2006-03-01"});
@@ -72,7 +72,7 @@ describe("DictBot End to End test!", async function() {
     describe("S3 to DynamoDB Pipeline", function(){
         it("update lambda is triggered when a file is uploaded to s3; record is written to dynamodb", async () => {
             const Key = `dictbot-e2etest-0-${new Date().getTime()}.json`;
-            const Body = await readFile("./assets/s3file.e2etest.0.json");
+            const Body = await readFile("./test/assets/s3file.e2etest.0.json");
             const params = {
                 Body,
                 Bucket: DefinitionBucketName,
@@ -92,7 +92,7 @@ describe("DictBot End to End test!", async function() {
 
         it("update lambda is triggered when a file is uploaded to s3; record is updated in dynamodb", async () => {
             const Key = `dictbot-e2etest-1-${new Date().getTime()}.json`;
-            const Body = await readFile("./assets/s3file.e2etest.1.json");
+            const Body = await readFile("./test/assets/s3file.e2etest.1.json");
             const params = {
                 Body,
                 Bucket: DefinitionBucketName,
