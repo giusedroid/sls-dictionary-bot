@@ -61,7 +61,7 @@ const dictionaryF = (term, CHALLENGE_TOKEN, bot) => async (event) => {
     // ingore messages form other bots (and myself)
     if ( bot_id ) return "200 OK";
 
-    const keyword = R.defaultTo("NOK", R.path([1],text.split("search: ")));
+    const keyword = R.defaultTo("NOK", R.path([1], text.split("search: ")));
 
     let reply;
     if( keyword !== "NOK")
@@ -86,11 +86,8 @@ const dictionaryF = (term, CHALLENGE_TOKEN, bot) => async (event) => {
 
 };
 
-// exports for testing purposes 
-module.exports.testUpdateF = updateF;
-module.exports.testDictionaryF = dictionaryF;
 
-// updateF :: ---------------------------------------------------------------------------
+// updateF ---------------------------------------------------------------------------
 // this higher order function generates the handler for the update lambda
 // when specialized with actionMapper, bucket and series
 // this is done to allow dependency injection and, in general
@@ -118,3 +115,7 @@ module.exports.update = updateF(term.actionsFromDefinitions(term), bucket, serie
 //
 // dictionary :: AWS Event -> Promise
 module.exports.dictionary = dictionaryF(term, CHALLENGE_TOKEN, bot);
+
+// exports for testing purposes 
+module.exports.testUpdateF = updateF;
+module.exports.testDictionaryF = dictionaryF;
