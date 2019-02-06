@@ -9,7 +9,6 @@ const BUCKET = process.env.BUCKET_NAME;
 const TOKEN  = process.env.BOT_TOKEN;
 const CHALLENGE_TOKEN = process.env.CHALLENGE_TOKEN;
 const REGION = process.env.AWS_REGION || "eu-west-1";
-
 AWS.config.update({ region: REGION });
 
 // dynamo :: DynamoDB Client
