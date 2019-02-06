@@ -9,7 +9,7 @@ deploy: &deploy
     - run:
         name: Install AWS cli
         command: |
-          sudo apt install python-pip python-dev && pip install awscli
+          sudo apt install python-pip python-dev && sudo pip install awscli
     - run:
         name: Deploy application
         command: sls deploy --stage $(DEPLOY_ENV)
