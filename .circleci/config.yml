@@ -28,7 +28,7 @@ deploy: &deploy
           - ./serverless-info.json
     - run:
         name: Deploy seed file
-        command: aws s3 cp ./assets/data/data.json s3://$(S3_DEFINITION_BUCKET_NAME)
+        command: aws s3 cp ./assets/data/data.json s3://${S3_DEFINITION_BUCKET_NAME}
 integration: &integration
   steps:
     - checkout
