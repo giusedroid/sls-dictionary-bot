@@ -5,7 +5,7 @@
 
 ## What
 
-![Databot](assets/img/data-bot-2.gif)
+![Databot](https://raw.githubusercontent.com/giusedroid/sls-dictionary-bot/master/assets/img/data-bot-2.gif)
 This repo provisions a Slack Chat Bot on AWS.  
 The bot will reply to mentions and direct messages.  
 In this first release the only available instruction is `search: <YOUR TERM>` to get a definition stored in DynamoDB.  
@@ -13,7 +13,7 @@ It's written in NodeJS with Serverless Framework and a bit of CloudFormation.
 
 ### Architecture
 
-![Serverless Slack Bot Architecture](assets/img/sls-bot.png)
+![Serverless Slack Bot Architecture](https://raw.githubusercontent.com/giusedroid/sls-dictionary-bot/master/assets/img/sls-bot.png)
 
 ### Dependencies
 
