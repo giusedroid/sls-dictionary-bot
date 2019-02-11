@@ -6,7 +6,7 @@
 ## What
 
 ![Databot](assets/img/data-bot-2.gif)
-This repo provisions a Slack chat bot on AWS.  
+This repo provisions a Slack Chat Bot on AWS.  
 The bot will reply to mentions and direct messages.  
 In this first release the only available instruction is `search: <YOUR TERM>` to get a definition stored in DynamoDB.  
 It's written in NodeJS with Serverless Framework and a bit of CloudFormation.  
@@ -25,9 +25,9 @@ It's written in NodeJS with Serverless Framework and a bit of CloudFormation.
 ### Disclaimer
 
 This repository is thought to introduce the reader to serverless technologies.  
-For a production environment, it would be highly recommended to separate the lifecycles of the two microservices (update and read lambdas, with relative infrastructure).  
+For a production environment, it would be highly recommended to separate the lifecycles of the two microservices (update and read lambdas, with relative infrastructure) and **secure the bot properly**.  
 
-## Configure it
+## Configure
 
 Most of the configuration is provided through environmental variables (both for your CI and local environment).  
 A number of manual operations is still needed to get the bot up and running.
@@ -38,12 +38,19 @@ A number of manual operations is still needed to get the bot up and running.
 - Log in to your workspace
 - Take note of a `channel id` you want to use to test your bot. You can find such id by right-clicking on the channel name and selecting `Copy Link`. The id is the last element of the path. E.g., in `https://my-workspace.slack.com/messages/C01234567`, the id is `C01234567`. Use this vaule to populate the environment variable `SLACK_TEST_CHANNEL` (see the dedicated section)
 - Create a new Slack App [here](https://api.slack.com/apps?new_app=1)
-- In the **Add Features and functionality** choose **Bots** or tap on **Bot Users** in the menu on the left
+- In **Add Features and functionality** choose **Bots** or tap on **Bot Users** in the menu on the left
   - Tap on **Add a Bot User**, fill in the required fields **Display name**, **Default username** and switch on **Always Show My Bot as Online**
   - Tap on **Add Bot User**
 - Tap on **oAuth & Permissions**
   - Tap on **Install App to Workspace**
   - once the app is installed, you should see **Bot User OAuth Access Token**. Use this token to populate `SLACK_BOT_TOKEN`
+- Tap on **Event Subscription**
+  - Switch on **Enable Events**
+  - Scroll down to section **Subscribe to Bot Events**
+  - Tap on **Add Bot User Event** and from the dropdown search and select at least
+    - `app_mention` --> Subscribe to only the message events that mention your app or bot
+    - `message.im` --> A message was posted in a direct message channel
+
 
 ### Dictionary
 
@@ -51,16 +58,16 @@ A sample dictionary can be found in `./assets/data/data.json`.
 
 ```json
 [
-    {
-        "term":"word",
+  {
+    "term":"word",
         "definition":"the default action is to create or update. If 'word' is not found, it will be added."
     },
     {
-        "term":"word",
+      "term":"word",
         "definition":"if it alreadt exists, this will update the definition of 'word'"
     },
     {
-        "term":"word",
+      "term":"word",
         "definition":"this doesn't really matter, as the term will be deleted",
         "action":"delete"
     }
@@ -81,7 +88,16 @@ Variables that must be in your (CI) environment to successfully deploy the stack
 | `SLACK_BOT_TOKEN` | It's the bot token you get when you register your bot user in Slack App. It begins with `xoxb-` |
 | `SLACK_TEST_CHANNEL` | The id of the channel you want to run tests into. You can find it by right-clicking on the channel name and selecting `Copy Link`. The id is the last element of the path in it. E.g., in `https://my-workspace.slack.com/messages/C01234567`, the id is `C01234567`|
 
-## Run
+### Verify your Bot
+
+Slack needs to verify the URL where your bot is receiving messages so, once the bot is deployed
+
+- log onto [Slack API](https://api.slack.com/apps)
+- tap on your app name
+- tap on **Event Subscriptions**
+- in the **Request URL** field insert the URL of your service. You can find this either in your CloudFormation exports as `ServiceEndpoint` or, if you deployed the bot from your local machine, in `serverless-info.json`. Your URL should look like this `https://${gateway_id}.execute-api.${aws_region}.amazonaws.com/${stage}/dictionary`
+
+## Deploy
 
 ### CircleCI
 
@@ -107,7 +123,7 @@ make seed-local
 
 ```bash
 nvm use
-nmp i
+npm i
 npm run test:local # won't ship coverage report to coverall
 ```
 
