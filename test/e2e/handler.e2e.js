@@ -167,9 +167,13 @@ describe("DictBot End to End test!", async function() {
                 json: true
             });
 
-            const response = await request.post(`${ServiceEndpoint}/dictionary`, messageOptions("search: e2e::test"));
-            const {message} = response;
-            expect(message).to.eql("Unauthorized");
+            try{
+                await request.post(`${ServiceEndpoint}/dictionary`, messageOptions("search: e2e::test"));
+            }catch(error){
+                expect(error.statusCode).to.eql(403);
+                expect(error.message).to.eql("403 - {\"message\":\"Unauthorized\"}");
+                expect(error.name).to.eql("StatusCodeError");
+            } 
             
         });
 
@@ -187,9 +191,13 @@ describe("DictBot End to End test!", async function() {
                 json: true
             });
 
-            const response = await request.post(`${ServiceEndpoint}/dictionary`, messageOptions("search: e2e::test"));
-            const {message} = response;
-            expect(message).to.eql("Unauthorized");
+            try{
+                await request.post(`${ServiceEndpoint}/dictionary`, messageOptions("search: e2e::test"));
+            }catch(error){
+                expect(error.statusCode).to.eql(403);
+                expect(error.message).to.eql("403 - {\"message\":\"Unauthorized\"}");
+                expect(error.name).to.eql("StatusCodeError");
+            } 
             
         });
 
