@@ -27,8 +27,6 @@ const bot = new Slack( {token: TOKEN});
 const readF = (term, CHALLENGE_TOKEN, bot) => async (event) => {
     const body = JSON.parse(R.path(["body"], event));
 
-    console.log("event", event);
-
     if( body && "challenge" in body && R.path(["token"], body) === CHALLENGE_TOKEN ){
         return {
             statusCode: 200,
@@ -46,6 +44,16 @@ const readF = (term, CHALLENGE_TOKEN, bot) => async (event) => {
             body: JSON.stringify({
                 message: "Challenge token found and logged in cloudwatch. Use CHALLENGE TOKEN FOUND to filter.",
                 timestamp: new Date()
+            })
+        };
+    }
+
+    if( R.path(["token"], body) !== CHALLENGE_TOKEN ){
+        console.log("Authorization token not found");
+        return {
+            statusCode: 403,
+            body: JSON.stringify({
+                message: "Unauthorized"
             })
         };
     }

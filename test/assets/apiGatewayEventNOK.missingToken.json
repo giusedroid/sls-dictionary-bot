@@ -1,5 +1,5 @@
 {
-    "body": "{\"event\":{\"channel\":\"not a channel\",\"text\":\"search: term\"},\"token\":\"not a token\"}",    
+    "body": "{\"event\":{\"channel\":\"not a channel\",\"text\":\"whoops I forgot how to sit\"},\"not-a-token\":\"not a token\"}",    
     "resource": "/{proxy+}",
     "path": "/dictionary",
     "httpMethod": "POST",

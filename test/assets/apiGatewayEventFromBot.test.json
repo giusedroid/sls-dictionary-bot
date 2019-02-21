@@ -1,5 +1,5 @@
 {
-    "body": "{\"event\":{\"channel\":\"not a channel\",\"bot_id\":\"definitely a bot\",\"text\":\"some nice text here\"}}",    
+    "body": "{\"event\":{\"channel\":\"not a channel\",\"bot_id\":\"definitely a bot\",\"text\":\"some nice text here\"},\"token\":\"not a token\"}",    
     "resource": "/{proxy+}",
     "path": "/dictionary",
     "httpMethod": "POST",

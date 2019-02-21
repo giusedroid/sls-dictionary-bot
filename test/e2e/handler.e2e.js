@@ -118,6 +118,7 @@ describe("DictBot End to End test!", async function() {
             const messageOptions = text => ({
                 method: "POST",
                 body: {
+                    token: challenge,
                     event: {
                         channel,
                         text
@@ -152,6 +153,44 @@ describe("DictBot End to End test!", async function() {
             }
 
 
+        });
+        it("Should reply Unauthorized if the authorization token is missing", async function(){
+            // messageOptions :: String -> {}
+            const messageOptions = text => ({
+                method: "POST",
+                body: {
+                    event: {
+                        channel,
+                        text
+                    }
+                },
+                json: true
+            });
+
+            const response = await request.post(`${ServiceEndpoint}/dictionary`, messageOptions("search: e2e::test"));
+            const {message} = response;
+            expect(message).to.eql("Unauthorized");
+            
+        });
+
+        it("Should reply Unauthorized if the authorization token is wrong", async function(){
+            // messageOptions :: String -> {}
+            const messageOptions = text => ({
+                method: "POST",
+                body: {
+                    token: "a wrong token",
+                    event: {
+                        channel,
+                        text
+                    }
+                },
+                json: true
+            });
+
+            const response = await request.post(`${ServiceEndpoint}/dictionary`, messageOptions("search: e2e::test"));
+            const {message} = response;
+            expect(message).to.eql("Unauthorized");
+            
         });
 
     });

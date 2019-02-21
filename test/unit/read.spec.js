@@ -25,7 +25,7 @@ describe("Dictionary endpoint handler", function() {
     
     it("ignores the message if it's coming from another bot or self", async () => {
         const mockEvent = require("../assets/apiGatewayEventFromBot.test");
-        const dictionary = handler.testReadF({}, null);
+        const dictionary = handler.testReadF({}, "not a token");
         const response = await dictionary(mockEvent);
         expect(response).to.equal("200 OK");
     });
@@ -47,7 +47,7 @@ describe("Dictionary endpoint handler", function() {
             }
         };
 
-        const dictionary = handler.testReadF(mockTerm, "", mockBot);
+        const dictionary = handler.testReadF(mockTerm, "not a token", mockBot);
         const {statusCode, body} = await dictionary(mockEvent);
         expect(statusCode).to.equal(200);
         const responseBody = JSON.parse(body);
@@ -73,7 +73,7 @@ describe("Dictionary endpoint handler", function() {
             }
         };
 
-        const dictionary = handler.testReadF(mockTerm, "", mockBot);
+        const dictionary = handler.testReadF(mockTerm, "not a token", mockBot);
         const {statusCode, body} = await dictionary(mockEvent);
         expect(statusCode).to.equal(200);
         const responseBody = JSON.parse(body);
@@ -97,13 +97,31 @@ describe("Dictionary endpoint handler", function() {
             }
         };
 
-        const dictionary = handler.testReadF(mockTerm, "", mockBot);
+        const dictionary = handler.testReadF(mockTerm, "not a token", mockBot);
         const {statusCode, body} = await dictionary(mockEvent);
         expect(statusCode).to.equal(200);
         const responseBody = JSON.parse(body);
         expect(R.path(["message"], responseBody)).to.eql("200 OK");
         expect(R.path(["messageSent"], responseBody)).to.eql(expectedResponse);
         expect(mockTerm.get.callCount).to.eql(0);
+    });
+
+    it("replies 403 if token is not found", async () => {
+        const mockEvent = require("../assets/apiGatewayEventNOK.missingToken");
+        const dictionary = handler.testReadF({}, "not a token");
+        const {statusCode, body} = await dictionary(mockEvent);
+        expect(statusCode).to.equal(403);
+        const responseBody = JSON.parse(body);
+        expect(R.path(["message"], responseBody)).to.eql("Unauthorized");
+    });
+
+    it("replies 403 if token is wrong", async () => {
+        const mockEvent = require("../assets/apiGatewayEventNOK.wrongToken");
+        const dictionary = handler.testReadF({}, "this is not a token, but it's wrong");
+        const {statusCode, body} = await dictionary(mockEvent);
+        expect(statusCode).to.equal(403);
+        const responseBody = JSON.parse(body);
+        expect(R.path(["message"], responseBody)).to.eql("Unauthorized");
     });
     
 });
