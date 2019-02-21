@@ -27,6 +27,8 @@ const bot = new Slack( {token: TOKEN});
 const readF = (term, CHALLENGE_TOKEN, bot) => async (event) => {
     const body = JSON.parse(R.path(["body"], event));
 
+    console.log("event", event);
+
     if( body && "challenge" in body && R.path(["token"], body) === CHALLENGE_TOKEN ){
         return {
             statusCode: 200,

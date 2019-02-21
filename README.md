@@ -25,7 +25,7 @@ It's written in NodeJS with Serverless Framework and a bit of CloudFormation.
 ### Disclaimer
 
 This repository is thought to introduce the reader to serverless technologies.  
-For a production environment, it would be highly recommended to separate the lifecycles of the two microservices (update and read lambdas, with relative infrastructure) and **secure the bot properly**.  
+For a production environment, it would be highly recommended to separate the lifecycles of the two microservices (update and read lambdas, with relative infrastructure).  
 
 ## Configure
 
