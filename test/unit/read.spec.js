@@ -123,5 +123,45 @@ describe("Dictionary endpoint handler", function() {
         const responseBody = JSON.parse(body);
         expect(R.path(["message"], responseBody)).to.eql("Unauthorized");
     });
+
+    it("replies 500 if dynamo breaks down", async () => {
+        const mockEvent = require("../assets/apiGatewayEventOK.test");
+        const mockTerm = {
+            get(){
+                return Promise.reject("dynamo error");
+            }
+        };
+        const mockBot = {
+            chat:{
+                postMessage: sinon.spy()
+            }
+        };
+        const dictionary = handler.testReadF(mockTerm, "not a token", mockBot);
+        const {statusCode, body} = await dictionary(mockEvent);
+        expect(statusCode).to.equal(500);
+        const responseBody = JSON.parse(body);
+        expect(R.path(["message"], responseBody)).to.eql("Error while processing message text");
+        expect(mockBot.chat.postMessage.callCount).to.eql(0);
+    });
+
+    it("replies 500 if slack api breaks down", async () => {
+        const mockEvent = require("../assets/apiGatewayEventOK.test");
+        const mockTerm = {
+            get: sinon.spy()
+        };
+        const mockBot = {
+            chat:{
+                postMessage(){
+                    return Promise.reject("slack error");
+                }
+            }
+        };
+        const dictionary = handler.testReadF(mockTerm, "not a token", mockBot);
+        const {statusCode, body} = await dictionary(mockEvent);
+        expect(statusCode).to.equal(500);
+        const responseBody = JSON.parse(body);
+        expect(R.path(["message"], responseBody)).to.eql("Error while replying to message");
+        expect(mockTerm.get.callCount).to.eql(1);
+    });
     
 });

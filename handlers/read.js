@@ -66,17 +66,39 @@ const readF = (term, CHALLENGE_TOKEN, bot) => async (event) => {
     const keyword = R.defaultTo("NOK", R.path([1], text.split("search: ")));
 
     let reply;
-    if( keyword !== "NOK")
-        reply = await term.get(keyword);
+    try{
+        if( keyword !== "NOK")
+            reply = await term.get(keyword);
+    }catch(error){
+        console.log("Error while processing DynamoDB request", keyword, reply, error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({
+                message: "Error while processing message text"
+            })
+        };
+    }
 
-    const messageSent = await bot.chat.postMessage({
-        token: TOKEN,
-        channel,
-        text: R.defaultTo(
-            "Sorry, I didn't get that...",
-            R.path(["Item", "Description", "S"], reply)
-        )
-    });
+    let messageSent;
+    try{
+        messageSent = await bot.chat.postMessage({
+            token: TOKEN,
+            channel,
+            text: R.defaultTo(
+                "Sorry, I didn't get that...",
+                R.path(["Item", "Description", "S"], reply)
+            )
+        });
+    }catch(error){
+        console.log("Error while replying on Slack", error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({
+                message: "Error while replying to message",
+                messageSent
+            })
+        };
+    }
 
     return {
         statusCode: 200,
