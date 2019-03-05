@@ -86,7 +86,7 @@ describe("DictBot End to End test!", async function() {
             });
             console.log("waiting to allow lambda to be invoked...");
             await delay(4000);
-            const itemInDynamo = await term.get("e2e::test");
+            const itemInDynamo = await term.get("e2e test");
             expect(R.path(["Item","Description","S"], itemInDynamo)).to.eql("0");
         });
 
@@ -106,8 +106,8 @@ describe("DictBot End to End test!", async function() {
             });
             console.log("waiting to allow lambda to be invoked...");
             await delay(2500);
-            const itemInDynamo = await term.get("e2e::test");
-            context.dynamo.push("e2e::test");
+            const itemInDynamo = await term.get("e2e test");
+            context.dynamo.push("e2e test");
             expect(R.path(["Item","Description","S"], itemInDynamo)).to.eql("message test");
         });
     });
@@ -139,7 +139,7 @@ describe("DictBot End to End test!", async function() {
             
             if(challenge){
                 console.log("bot is verified, so can send messages");
-                const response = await request.post(`${ServiceEndpoint}/dictionary`, messageOptions("search: e2e::test"));
+                const response = await request.post(`${ServiceEndpoint}/dictionary`, messageOptions("search: e2e test"));
                 const {message, messageSent:{ ok, message:{text}}} = response;
                 expect(message).to.eql("200 OK");
                 expect(ok).to.be.true;
@@ -168,7 +168,7 @@ describe("DictBot End to End test!", async function() {
             });
 
             try{
-                await request.post(`${ServiceEndpoint}/dictionary`, messageOptions("search: e2e::test"));
+                await request.post(`${ServiceEndpoint}/dictionary`, messageOptions("search: e2e test"));
             }catch(error){
                 expect(error.statusCode).to.eql(403);
                 expect(error.message).to.eql("403 - {\"message\":\"Unauthorized\"}");
@@ -192,7 +192,7 @@ describe("DictBot End to End test!", async function() {
             });
 
             try{
-                await request.post(`${ServiceEndpoint}/dictionary`, messageOptions("search: e2e::test"));
+                await request.post(`${ServiceEndpoint}/dictionary`, messageOptions("search: e2e test"));
             }catch(error){
                 expect(error.statusCode).to.eql(403);
                 expect(error.message).to.eql("403 - {\"message\":\"Unauthorized\"}");
