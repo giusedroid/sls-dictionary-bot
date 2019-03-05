@@ -1,6 +1,6 @@
 [
     {
-        "term": "e2e::test",
+        "term": "e2etest",
         "definition": "message test"
     }
 ]
