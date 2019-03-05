@@ -64,11 +64,12 @@ const readF = (term, CHALLENGE_TOKEN, bot) => async (event) => {
     if ( bot_id ) return "200 OK";
 
     const keyword = R.defaultTo("NOK", R.path([1], text.split("search: ")));
+    const sanitized = R.replace(/[^a-zA-Z0-9 ]/g, "", keyword);
 
     let reply;
     try{
         if( keyword !== "NOK")
-            reply = await term.get(keyword);
+            reply = await term.get(sanitized);
     }catch(error){
         console.log("Error while processing DynamoDB request", keyword, reply, error);
         return {
